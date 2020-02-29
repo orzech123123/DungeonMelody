@@ -15,15 +15,13 @@ import androidx.annotation.RequiresApi;
 
 import com.example.dungeonmelody.R;
 import com.example.dungeonmelody.configuration.YouTubeConfig;
-import com.example.dungeonmelody.utilities.MultiplePlayerStateChangeListener;
+import com.example.dungeonmelody.data.CreateMelodyData;
 import com.google.android.youtube.player.YouTubeBaseActivity;
 import com.google.android.youtube.player.YouTubeInitializationResult;
 import com.google.android.youtube.player.YouTubePlayer;
 import com.google.android.youtube.player.YouTubePlayerView;
 
 import java.io.IOException;
-import java.sql.Ref;
-import java.util.Arrays;
 
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -52,6 +50,9 @@ public class CreateMelodyChooseVideoActivity extends YouTubeBaseActivity {
         _nextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                String videoUrl = _videoUrlText.getText().toString();
+                CreateMelodyData.VideoUrl = videoUrl;
+
                 Intent intent = new Intent(CreateMelodyChooseVideoActivity.this, MainActivity.class);
                 startActivity(intent);
             }
@@ -72,8 +73,8 @@ public class CreateMelodyChooseVideoActivity extends YouTubeBaseActivity {
                     return;
                 }
 
-                String url = _videoUrlText.getText().toString();
-                _youTubePlayer.loadVideo(url);
+                String videoUrl = _videoUrlText.getText().toString();
+                _youTubePlayer.loadVideo(videoUrl);
 
                 TurnOffOnNextButtonIfVideoExist().execute();
             }
@@ -93,7 +94,7 @@ public class CreateMelodyChooseVideoActivity extends YouTubeBaseActivity {
             protected Object doInBackground(Object[] objects) {
 
                 OkHttpClient client = new OkHttpClient();
-                @SuppressLint("WrongThread") String url = _videoUrlText.getText().toString();
+                String url = _videoUrlText.getText().toString();
                 Request request = new Request.Builder()
                         .url("https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=" + url)
                         .build();
