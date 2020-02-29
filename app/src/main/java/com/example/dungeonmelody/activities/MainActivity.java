@@ -30,7 +30,10 @@ public class MainActivity extends YouTubeBaseActivity
 
     @Override
     protected void onDestroy() {
-        _seekBarRefreshTask.cancel(true);
+        if(_seekBarRefreshTask != null)
+        {
+            _seekBarRefreshTask.cancel(true);
+        }
         super.onDestroy();
     }
 
