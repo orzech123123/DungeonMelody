@@ -54,12 +54,16 @@ public class MainActivity extends YouTubeBaseActivity
             }
         });
 
-        _closeButton.setOnClickListener(new View.OnClickListener() {
+        _closeButton.setOnClickListener(GetCloseButtonClickListener());
+    }
+
+    private View.OnClickListener GetCloseButtonClickListener() {
+        return new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 finish();
             }
-        });
+        };
     }
 
     private YouTubePlayer.OnInitializedListener GetPlayerOnInitListener(){
