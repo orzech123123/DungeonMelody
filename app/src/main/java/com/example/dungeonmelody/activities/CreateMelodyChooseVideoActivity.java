@@ -1,6 +1,5 @@
 package com.example.dungeonmelody.activities;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -41,7 +40,7 @@ public class CreateMelodyChooseVideoActivity extends YouTubeBaseActivity {
 
         _youTubePlayerView = findViewById(R.id.youtubePlayer);
         _videoUrlText = findViewById(R.id.videoUrlText);
-        _nextButton = findViewById(R.id.nextButton);
+        _nextButton = findViewById(R.id.separatorButton);
 
         _youTubePlayerView.initialize(YouTubeConfig.GetApiKey(), GetPlayerOnInitListener());
         _videoUrlText.addTextChangedListener(GetVideoUrlChangeListener());

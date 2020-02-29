@@ -23,7 +23,7 @@
         android:padding="0dp" />
 
     <Button
-        android:id="@+id/nextButton"
+        android:id="@+id/separatorButton"
         android:layout_width="60dp"
         android:layout_height="60dp"
         android:text="Next" />
