@@ -31,13 +31,13 @@
         android:text="Play" />
 
     <Button
-        android:id="@+id/xButton"
+        android:id="@+id/closeButton"
         android:layout_width="60dp"
         android:layout_height="60dp"
         android:text="Button" />
 
     <SeekBar
-        android:id="@+id/seekBar2"
+        android:id="@+id/seekBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
