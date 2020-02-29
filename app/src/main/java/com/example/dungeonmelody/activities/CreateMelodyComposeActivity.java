@@ -4,12 +4,14 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.SeekBar;
+import android.widget.TextView;
 
 import com.example.dungeonmelody.R;
 import com.example.dungeonmelody.backgroundTasks.UpdateSeekBarProgressTask;
 import com.example.dungeonmelody.configuration.YouTubeConfig;
 import com.example.dungeonmelody.actions.SetSeekBarMaxProgressValueFromPlayerAction;
 import com.example.dungeonmelody.actions.UpdatePlayerProgressOnSeekBarChangeAction;
+import com.example.dungeonmelody.data.CreateMelodyData;
 import com.example.dungeonmelody.utilities.MultipleOnSeekBarChangeListener;
 import com.example.dungeonmelody.utilities.MultiplePlayerStateChangeListener;
 import com.google.android.youtube.player.YouTubeBaseActivity;
@@ -19,12 +21,13 @@ import com.google.android.youtube.player.YouTubePlayerView;
 
 import java.util.Arrays;
 
-public class MainActivity extends YouTubeBaseActivity
+public class CreateMelodyComposeActivity extends YouTubeBaseActivity
 {
     private YouTubePlayer _youTubePlayer;
     private YouTubePlayerView _youTubePlayerView;
-    private Button _playButton;
-    private Button _closeButton;
+    private Button _markerButton;
+    private Button _startButton;
+    private Button _breakButton;
     private SeekBar _seekBar;
     private UpdateSeekBarProgressTask _seekBarRefreshTask;
 
@@ -40,28 +43,33 @@ public class MainActivity extends YouTubeBaseActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_create_melody_compose);
 
         _youTubePlayerView = findViewById(R.id.youtubePlayer);
-        _playButton = findViewById(R.id.playButton);
-        _closeButton = findViewById(R.id.closeButton);
+        _markerButton = findViewById(R.id.markerButton);
+        _startButton = findViewById(R.id.startButton);
+        _breakButton = findViewById(R.id.breakButton);
         _seekBar = findViewById(R.id.seekBar);
 
-        _playButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                _youTubePlayerView.initialize(YouTubeConfig.GetApiKey(), GetPlayerOnInitListener());
-            }
-        });
+        _startButton.setOnClickListener(GetStartButtonOnClickListener());
 
-        _closeButton.setOnClickListener(GetCloseButtonClickListener());
+        ((TextView)findViewById(R.id.textView)).setText(CreateMelodyData.TabsText);
+
+        _youTubePlayerView.initialize(YouTubeConfig.GetApiKey(), GetPlayerOnInitListener());
+
+        _seekBar.setEnabled(false);
     }
 
-    private View.OnClickListener GetCloseButtonClickListener() {
+    private View.OnClickListener GetStartButtonOnClickListener() {
         return new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                finish();
+                if(_youTubePlayer != null)
+                {
+                    _youTubePlayer.play();
+                    _seekBar.setEnabled(true);
+                }
+                //_youTubePlayerView.initialize(YouTubeConfig.GetApiKey(), GetPlayerOnInitListener());
             }
         };
     }
@@ -87,7 +95,7 @@ public class MainActivity extends YouTubeBaseActivity
                         (SeekBar.OnSeekBarChangeListener)new UpdatePlayerProgressOnSeekBarChangeAction(_youTubePlayer)
                 )));
 
-                _youTubePlayer.loadVideo("XI8l7rThpn8");
+                _youTubePlayer.cueVideo(CreateMelodyData.VideoUrl);
             }
 
             @Override

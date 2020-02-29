@@ -76,7 +76,7 @@ public class CreateMelodyEnterTabsActivity extends AppCompatActivity {
                 String tabs = _tabsText.getText().toString();
                 CreateMelodyData.TabsText = tabs;
 
-                Intent intent = new Intent(CreateMelodyEnterTabsActivity.this, MainActivity.class);
+                Intent intent = new Intent(CreateMelodyEnterTabsActivity.this, CreateMelodyComposeActivity.class);
                 startActivity(intent);
             }
         };
