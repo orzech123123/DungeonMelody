@@ -11,8 +11,7 @@ public class PlayerStateChangeListener implements YouTubePlayer.PlayerStateChang
 
     public PlayerStateChangeListener(SeekBar seekBar, YouTubePlayer youTubePlayer){
         _seekBar = seekBar;
-
-        this._youTubePlayer = youTubePlayer;
+        _youTubePlayer = youTubePlayer;
     }
 
     @Override
@@ -32,7 +31,6 @@ public class PlayerStateChangeListener implements YouTubePlayer.PlayerStateChang
 
     @Override
     public void onVideoStarted() {
-        _youTubePlayer.play();
         int duration = _youTubePlayer.getDurationMillis();
         _seekBar.setMax(duration);
     }
