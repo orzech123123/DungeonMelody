@@ -1,15 +1,15 @@
-package com.example.dungeonmelody.listeners;
+package com.example.dungeonmelody.actions;
 
 import android.widget.SeekBar;
 
 import com.google.android.youtube.player.YouTubePlayer;
 
-public class PlayerStateChangeListener implements YouTubePlayer.PlayerStateChangeListener {
+public class SetSeekBarMaxProgressValueFromPlayerAction implements YouTubePlayer.PlayerStateChangeListener {
 
     private final SeekBar _seekBar;
     private final YouTubePlayer _youTubePlayer;
 
-    public PlayerStateChangeListener(SeekBar seekBar, YouTubePlayer youTubePlayer){
+    public SetSeekBarMaxProgressValueFromPlayerAction(SeekBar seekBar, YouTubePlayer youTubePlayer){
         _seekBar = seekBar;
         _youTubePlayer = youTubePlayer;
     }
@@ -21,7 +21,6 @@ public class PlayerStateChangeListener implements YouTubePlayer.PlayerStateChang
 
     @Override
     public void onLoaded(String s) {
-        _youTubePlayer.play();
     }
 
     @Override

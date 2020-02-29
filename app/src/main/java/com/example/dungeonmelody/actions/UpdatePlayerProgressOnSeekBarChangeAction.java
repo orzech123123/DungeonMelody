@@ -1,14 +1,14 @@
-package com.example.dungeonmelody.listeners;
+package com.example.dungeonmelody.actions;
 
 import android.widget.SeekBar;
 
 import com.google.android.youtube.player.YouTubePlayer;
 
-public class PlayerSeekBarChangeListener implements SeekBar.OnSeekBarChangeListener {
+public class UpdatePlayerProgressOnSeekBarChangeAction implements SeekBar.OnSeekBarChangeListener {
 
     private final YouTubePlayer _youTubePlayer;
 
-    public PlayerSeekBarChangeListener(YouTubePlayer youTubePlayer){
+    public UpdatePlayerProgressOnSeekBarChangeAction(YouTubePlayer youTubePlayer){
 
         _youTubePlayer = youTubePlayer;
     }
@@ -20,7 +20,6 @@ public class PlayerSeekBarChangeListener implements SeekBar.OnSeekBarChangeListe
         }
 
         _youTubePlayer.seekToMillis(progress);
-        seekBar.setProgress(progress);
     }
 
     @Override

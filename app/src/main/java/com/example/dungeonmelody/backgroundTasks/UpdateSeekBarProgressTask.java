@@ -5,12 +5,12 @@ import android.widget.SeekBar;
 
 import com.google.android.youtube.player.YouTubePlayer;
 
-public class PlayerSeekBarRefreshTask extends AsyncTask {
+public class UpdateSeekBarProgressTask extends AsyncTask {
 
     private final SeekBar _seekBar;
     private final YouTubePlayer _youTubePlayer;
 
-    public PlayerSeekBarRefreshTask(SeekBar seekBar, YouTubePlayer youTubePlayer)
+    public UpdateSeekBarProgressTask(SeekBar seekBar, YouTubePlayer youTubePlayer)
     {
         this._seekBar = seekBar;
         this._youTubePlayer = youTubePlayer;

@@ -6,14 +6,19 @@ import android.widget.Button;
 import android.widget.SeekBar;
 
 import com.example.dungeonmelody.R;
-import com.example.dungeonmelody.backgroundTasks.PlayerSeekBarRefreshTask;
+import com.example.dungeonmelody.backgroundTasks.UpdateSeekBarProgressTask;
 import com.example.dungeonmelody.configuration.YouTubeConfig;
-import com.example.dungeonmelody.listeners.PlayerSeekBarChangeListener;
-import com.example.dungeonmelody.listeners.PlayerStateChangeListener;
+import com.example.dungeonmelody.actions.SetSeekBarMaxProgressValueFromPlayerAction;
+import com.example.dungeonmelody.actions.UpdatePlayerProgressOnSeekBarChangeAction;
+import com.example.dungeonmelody.actions.ConfigurePlayerAction;
+import com.example.dungeonmelody.utilities.MultipleOnSeekBarChangeListener;
+import com.example.dungeonmelody.utilities.MultiplePlayerStateChangeListener;
 import com.google.android.youtube.player.YouTubeBaseActivity;
 import com.google.android.youtube.player.YouTubeInitializationResult;
 import com.google.android.youtube.player.YouTubePlayer;
 import com.google.android.youtube.player.YouTubePlayerView;
+
+import java.util.Arrays;
 
 public class MainActivity extends YouTubeBaseActivity
 {
@@ -22,7 +27,7 @@ public class MainActivity extends YouTubeBaseActivity
     private Button _playButton;
     private Button _closeButton;
     private SeekBar _seekBar;
-    private PlayerSeekBarRefreshTask _seekBarRefreshTask;
+    private UpdateSeekBarProgressTask _seekBarRefreshTask;
 
     @Override
     protected void onDestroy() {
@@ -35,9 +40,9 @@ public class MainActivity extends YouTubeBaseActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        _youTubePlayerView = findViewById(R.id.youtubePlayer);
         _playButton = findViewById(R.id.playButton);
         _closeButton = findViewById(R.id.closeButton);
-        _youTubePlayerView = findViewById(R.id.youtubePlayer);
         _seekBar = findViewById(R.id.seekBar);
 
         _playButton.setOnClickListener(new View.OnClickListener() {
@@ -66,15 +71,18 @@ public class MainActivity extends YouTubeBaseActivity
 
                 _youTubePlayer = youTubePlayer;
 
-                _seekBarRefreshTask = new PlayerSeekBarRefreshTask(_seekBar, _youTubePlayer);
+                _youTubePlayer.setPlayerStateChangeListener(new MultiplePlayerStateChangeListener(Arrays.asList(
+                        new SetSeekBarMaxProgressValueFromPlayerAction(_seekBar, _youTubePlayer),
+                        new ConfigurePlayerAction(_youTubePlayer)
+                )));
+
+                _seekBarRefreshTask = new UpdateSeekBarProgressTask(_seekBar, _youTubePlayer);
                 _seekBarRefreshTask.execute();
+                _seekBar.setOnSeekBarChangeListener(new MultipleOnSeekBarChangeListener(Arrays.asList(
+                        (SeekBar.OnSeekBarChangeListener)new UpdatePlayerProgressOnSeekBarChangeAction(_youTubePlayer)
+                )));
 
-                PlayerStateChangeListener playerStateChangeListener = new PlayerStateChangeListener(_seekBar, _youTubePlayer);
-                _youTubePlayer.setPlayerStateChangeListener(playerStateChangeListener);
-
-                _seekBar.setOnSeekBarChangeListener(new PlayerSeekBarChangeListener(_youTubePlayer));
-
-                youTubePlayer.cueVideo("XI8l7rThpn8");
+                _youTubePlayer.cueVideo("XI8l7rThpn8");
             }
 
             @Override
