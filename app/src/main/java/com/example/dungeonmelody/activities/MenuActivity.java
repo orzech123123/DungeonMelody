@@ -20,7 +20,7 @@ public class MenuActivity extends AppCompatActivity {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MenuActivity.this, MainActivity.class);
+                Intent intent = new Intent(MenuActivity.this, CreateMelodyChooseVideoActivity.class);
                 startActivity(intent);
             }
         });

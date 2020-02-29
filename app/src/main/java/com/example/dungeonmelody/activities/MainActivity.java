@@ -10,7 +10,6 @@ import com.example.dungeonmelody.backgroundTasks.UpdateSeekBarProgressTask;
 import com.example.dungeonmelody.configuration.YouTubeConfig;
 import com.example.dungeonmelody.actions.SetSeekBarMaxProgressValueFromPlayerAction;
 import com.example.dungeonmelody.actions.UpdatePlayerProgressOnSeekBarChangeAction;
-import com.example.dungeonmelody.actions.ConfigurePlayerAction;
 import com.example.dungeonmelody.utilities.MultipleOnSeekBarChangeListener;
 import com.example.dungeonmelody.utilities.MultiplePlayerStateChangeListener;
 import com.google.android.youtube.player.YouTubeBaseActivity;
@@ -72,8 +71,7 @@ public class MainActivity extends YouTubeBaseActivity
                 _youTubePlayer = youTubePlayer;
 
                 _youTubePlayer.setPlayerStateChangeListener(new MultiplePlayerStateChangeListener(Arrays.asList(
-                        new SetSeekBarMaxProgressValueFromPlayerAction(_seekBar, _youTubePlayer),
-                        new ConfigurePlayerAction(_youTubePlayer)
+                        (YouTubePlayer.PlayerStateChangeListener) new SetSeekBarMaxProgressValueFromPlayerAction(_seekBar, _youTubePlayer)
                 )));
 
                 _seekBarRefreshTask = new UpdateSeekBarProgressTask(_seekBar, _youTubePlayer);
@@ -82,7 +80,7 @@ public class MainActivity extends YouTubeBaseActivity
                         (SeekBar.OnSeekBarChangeListener)new UpdatePlayerProgressOnSeekBarChangeAction(_youTubePlayer)
                 )));
 
-                _youTubePlayer.cueVideo("XI8l7rThpn8");
+                _youTubePlayer.loadVideo("XI8l7rThpn8");
             }
 
             @Override
