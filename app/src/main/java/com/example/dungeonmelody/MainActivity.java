@@ -1,5 +1,7 @@
 package com.example.dungeonmelody;
 
+import android.annotation.SuppressLint;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -17,7 +19,14 @@ public class MainActivity extends YouTubeBaseActivity
     private Button _playButton;
     private Button _xButton;
     private SeekBar _seekBar;
-    YouTubePlayer.OnInitializedListener _youtubePlayerOnInit;
+    private YouTubePlayer.OnInitializedListener _youtubePlayerOnInit;
+    private AsyncTask _seekBarRefreshTask;
+
+    @Override
+    protected void onDestroy() {
+        _seekBarRefreshTask.cancel(true);
+        super.onDestroy();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +42,11 @@ public class MainActivity extends YouTubeBaseActivity
 
             @Override
             public void onInitializationSuccess(YouTubePlayer.Provider provider, YouTubePlayer youTubePlayer, boolean b) {
+                if(_youTubePlayer != null)
+                {
+                    return;
+                }
+
                 _youTubePlayer = youTubePlayer;
 //                youTubePlayer.loadVideo("agCof0o43c8");
 //                int duration = youTubePlayer.getDurationMillis();
@@ -91,13 +105,18 @@ public class MainActivity extends YouTubeBaseActivity
         _xButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                _youTubePlayer.seekToMillis(12000);
+                finish();
             }
         });
 
         _seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                if(!fromUser)
+                {
+                    return;
+                }
+
                 if(_youTubePlayer != null)
                 {
                     _youTubePlayer.seekToMillis(progress);
@@ -114,5 +133,54 @@ public class MainActivity extends YouTubeBaseActivity
             public void onStopTrackingTouch(SeekBar seekBar) {
             }
         });
+
+        _seekBarRefreshTask = new AsyncTask() {
+            @SuppressLint("WrongThread")
+            @Override
+            protected Object doInBackground(Object[] objects) {
+                while (true)
+                {
+                    if(isCancelled())
+                    {
+                        return null;
+                    }
+
+                    if(_seekBar == null || _youTubePlayer == null)
+                    {
+                        continue;
+                    }
+
+                    _seekBar.setProgress(_youTubePlayer.getCurrentTimeMillis());
+
+                    try {
+                        Thread.sleep(100);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        };
+        _seekBarRefreshTask.execute();
+
+//        AsyncTask.execute(new Runnable() {
+//            @Override
+//            public void run() {
+//                while (true)
+//                {
+//                    if(_seekBar == null || _youTubePlayer == null)
+//                    {
+//                        continue;
+//                    }
+//
+//                    _seekBar.setProgress(_youTubePlayer.getCurrentTimeMillis());
+//
+//                    try {
+//                        Thread.sleep(100);
+//                    } catch (InterruptedException e) {
+//                        e.printStackTrace();
+//                    }
+//                }
+//            }
+//        });
     }
 }
