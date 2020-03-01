@@ -13,7 +13,22 @@
         android:inputType="text|textMultiLine"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        android:text="-5 3 -3* 4 4* 4
+
+-5 3 -3* 4 4* 4
+
+
+
+-9  7  -7* 8  8*    8
+
+-9* -9* -9* -9* -9*  -7*   8  8*  8
+
+ -9  -7*  8   8*  8*   8
+
+-9* -9* -9* -7*  -7*  8   8 8*  8 -9* -10
+
+-9  7 -7*  8  8* 8  8  "/>
 
     <Button
         android:id="@+id/separatorButton"

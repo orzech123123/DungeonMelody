@@ -62,7 +62,7 @@ public class CreateMelodyEnterTabsActivity extends AppCompatActivity {
             public void onClick(View v) {
                 String text = _tabsText.getText().toString();
                 int cursorPosition = _tabsText.getSelectionStart();
-                text = text.substring(0, cursorPosition) + " X " + text.substring(cursorPosition);
+                text = text.substring(0, cursorPosition) + " [X] " + text.substring(cursorPosition);
                 _tabsText.setText(text);
                 _tabsText.setSelection(cursorPosition);
             }

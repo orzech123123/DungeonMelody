@@ -12,6 +12,8 @@ import com.example.dungeonmelody.configuration.YouTubeConfig;
 import com.example.dungeonmelody.actions.SetSeekBarMaxProgressValueFromPlayerAction;
 import com.example.dungeonmelody.actions.UpdatePlayerProgressOnSeekBarChangeAction;
 import com.example.dungeonmelody.data.CreateMelodyData;
+import com.example.dungeonmelody.data.TabPart;
+import com.example.dungeonmelody.services.MelodyComposerService;
 import com.example.dungeonmelody.utilities.MultipleOnSeekBarChangeListener;
 import com.example.dungeonmelody.utilities.MultiplePlayerStateChangeListener;
 import com.google.android.youtube.player.YouTubeBaseActivity;
@@ -30,6 +32,7 @@ public class CreateMelodyComposeActivity extends YouTubeBaseActivity
     private Button _breakButton;
     private SeekBar _seekBar;
     private UpdateSeekBarProgressTask _seekBarRefreshTask;
+    private MelodyComposerService _melodyComposerService;
 
     @Override
     protected void onDestroy() {
@@ -53,23 +56,27 @@ public class CreateMelodyComposeActivity extends YouTubeBaseActivity
 
         _startButton.setOnClickListener(GetStartButtonOnClickListener());
 
-        ((TextView)findViewById(R.id.textView)).setText(CreateMelodyData.TabsText);
+        _seekBar.setEnabled(false);
+
+        _melodyComposerService = new MelodyComposerService(CreateMelodyData.TabsText);
 
         _youTubePlayerView.initialize(YouTubeConfig.GetApiKey(), GetPlayerOnInitListener());
 
-        _seekBar.setEnabled(false);
+        //TODO move it somewhere..
+        for (TabPart tabPart: _melodyComposerService.GetTabParts()) {
+            String text = ((TextView) findViewById(R.id.textView)).getText().toString();
+            text = text + tabPart.Tabs + "\n";
+            ((TextView) findViewById(R.id.textView)).setText(text);
+        }
     }
 
     private View.OnClickListener GetStartButtonOnClickListener() {
         return new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(_youTubePlayer != null)
-                {
-                    _youTubePlayer.play();
-                    _seekBar.setEnabled(true);
-                }
-                //_youTubePlayerView.initialize(YouTubeConfig.GetApiKey(), GetPlayerOnInitListener());
+                _youTubePlayer.play();
+                _seekBar.setEnabled(true);
+                _melodyComposerService.Start();
             }
         };
     }
@@ -92,7 +99,8 @@ public class CreateMelodyComposeActivity extends YouTubeBaseActivity
                 _seekBarRefreshTask = new UpdateSeekBarProgressTask(_seekBar, _youTubePlayer);
                 _seekBarRefreshTask.execute();
                 _seekBar.setOnSeekBarChangeListener(new MultipleOnSeekBarChangeListener(Arrays.asList(
-                        (SeekBar.OnSeekBarChangeListener)new UpdatePlayerProgressOnSeekBarChangeAction(_youTubePlayer)
+                        new UpdatePlayerProgressOnSeekBarChangeAction(_youTubePlayer),
+                        _melodyComposerService.GetOnPlayerProgressChangeListener()
                 )));
 
                 _youTubePlayer.cueVideo(CreateMelodyData.VideoUrl);
