@@ -7,7 +7,12 @@ public class TabPart {
         Tabs = tabs;
     }
 
-    public String Tabs;
+    public final String Tabs;
     public Integer ProgressStart = null;
     public Integer ProgressEnd = null;
+
+    public void ClearProgresses(){
+        ProgressStart = null;
+        ProgressEnd = null;
+    }
 }

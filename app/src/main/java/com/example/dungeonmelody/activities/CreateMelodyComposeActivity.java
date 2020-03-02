@@ -1,14 +1,7 @@
 package com.example.dungeonmelody.activities;
 
-import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Html;
-import android.text.Spannable;
-import android.text.SpannableString;
-import android.text.SpannableStringBuilder;
-import android.text.Spanned;
-import android.text.style.ForegroundColorSpan;
-import android.text.style.StyleSpan;
 import android.view.View;
 import android.widget.Button;
 import android.widget.SeekBar;
@@ -111,6 +104,7 @@ public class CreateMelodyComposeActivity extends YouTubeBaseActivity
             @Override
             public void onClick(View v) {
                 _melodyComposerService.SetBreak(_youTubePlayer.getCurrentTimeMillis());
+                UpdateTabsOnView();
             }
         };
     }
@@ -137,14 +131,15 @@ public class CreateMelodyComposeActivity extends YouTubeBaseActivity
                 _youTubePlayer = youTubePlayer;
 
                 _youTubePlayer.setPlayerStateChangeListener(new MultiplePlayerStateChangeListener(Arrays.asList(
-                        (YouTubePlayer.PlayerStateChangeListener) new SetSeekBarMaxProgressValueFromPlayerAction(_seekBar, _youTubePlayer)
+                        new SetSeekBarMaxProgressValueFromPlayerAction(_seekBar, _youTubePlayer)
                 )));
 
                 _seekBarRefreshTask = new UpdateSeekBarProgressTask(_seekBar, _youTubePlayer);
                 _seekBarRefreshTask.execute();
                 _seekBar.setOnSeekBarChangeListener(new MultipleOnSeekBarChangeListener(Arrays.asList(
                         new UpdatePlayerProgressOnSeekBarChangeAction(_youTubePlayer),
-                        _melodyComposerService.GetOnPlayerProgressChangeListener()
+                        _melodyComposerService.GetClearTabProgressesOnProgresRewindBackListener(),
+                        _melodyComposerService.GetFireActionOnRewindBackListener(() -> UpdateTabsOnView())
                 )));
 
                 _youTubePlayer.cueVideo(CreateMelodyData.VideoUrl);
