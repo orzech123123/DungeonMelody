@@ -15,4 +15,8 @@ public class TabPart {
         ProgressStart = null;
         ProgressEnd = null;
     }
+
+    public boolean IsFilled() {
+        return ProgressStart != null && ProgressEnd != null;
+    }
 }

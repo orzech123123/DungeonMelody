@@ -1,11 +1,17 @@
 package com.example.dungeonmelody.activities;
 
+import android.content.Intent;
+import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.Html;
 import android.view.View;
 import android.widget.Button;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import androidx.annotation.RequiresApi;
 
 import com.example.dungeonmelody.R;
 import com.example.dungeonmelody.actions.RunOnSeekProgressRewindBackAction;
@@ -23,7 +29,12 @@ import com.google.android.youtube.player.YouTubeInitializationResult;
 import com.google.android.youtube.player.YouTubePlayer;
 import com.google.android.youtube.player.YouTubePlayerView;
 
+import java.io.IOException;
 import java.util.Arrays;
+
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 public class CreateMelodyComposeActivity extends YouTubeBaseActivity
 {
@@ -58,6 +69,7 @@ public class CreateMelodyComposeActivity extends YouTubeBaseActivity
 
         _markerButton.setOnClickListener(GetMarkerButtonOnClickListener());
         _breakButton.setOnClickListener(GetBreakButtonOnClickListener());
+        _saveButton.setOnClickListener(GetSaveButtonOnClickListener());
 
         SetUiEnabled(false);
 
@@ -92,6 +104,17 @@ public class CreateMelodyComposeActivity extends YouTubeBaseActivity
         return v -> {
             _melodyComposerService.SetBreak(_youTubePlayer.getCurrentTimeMillis());
             UpdateTabsOnView();
+        };
+    }
+    private View.OnClickListener GetSaveButtonOnClickListener() {
+        return v -> {
+            if(_melodyComposerService.IsReadyToSave())
+            {
+                _melodyComposerService.SaveMelody();
+
+                Intent intent = new Intent(CreateMelodyComposeActivity.this, MenuActivity.class);
+                startActivity(intent);
+            }
         };
     }
 

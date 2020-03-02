@@ -82,4 +82,12 @@ public class MelodyComposerService {
             StopRecording();
         }
     }
+
+    public void SaveMelody() {
+
+    }
+
+    public boolean IsReadyToSave() {
+        return _tabParts.stream().allMatch(t -> t.IsFilled());
+    }
 }
