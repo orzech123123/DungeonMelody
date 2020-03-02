@@ -8,6 +8,7 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.example.dungeonmelody.R;
+import com.example.dungeonmelody.actions.RunOnSeekProgressRewindBackAction;
 import com.example.dungeonmelody.backgroundTasks.UpdateSeekBarProgressTask;
 import com.example.dungeonmelody.configuration.YouTubeConfig;
 import com.example.dungeonmelody.actions.SetSeekBarMaxProgressValueFromPlayerAction;
@@ -23,6 +24,7 @@ import com.google.android.youtube.player.YouTubePlayer;
 import com.google.android.youtube.player.YouTubePlayerView;
 
 import java.util.Arrays;
+import java.util.function.Consumer;
 
 public class CreateMelodyComposeActivity extends YouTubeBaseActivity
 {
@@ -132,9 +134,9 @@ public class CreateMelodyComposeActivity extends YouTubeBaseActivity
                 _seekBarRefreshTask.execute();
                 _seekBar.setOnSeekBarChangeListener(new MultipleOnSeekBarChangeListener(Arrays.asList(
                         new UpdatePlayerProgressOnSeekBarChangeAction(_youTubePlayer),
-                        _melodyComposerService.GetFireActionOnRewindBackListener((progress) -> _melodyComposerService.Break()),
-                        _melodyComposerService.GetFireActionOnRewindBackListener((progress) -> _melodyComposerService.ClearTabProgressesAfterProgress(progress)),
-                        _melodyComposerService.GetFireActionOnRewindBackListener((progress) -> UpdateTabsOnView())
+                        new RunOnSeekProgressRewindBackAction((progress) -> _melodyComposerService.Break()),
+                        new RunOnSeekProgressRewindBackAction((progress) -> _melodyComposerService.ClearTabProgressesAfterProgress(progress)),
+                        new RunOnSeekProgressRewindBackAction((progress) -> UpdateTabsOnView())
                 )));
 
                 _youTubePlayer.cueVideo(CreateMelodyData.VideoUrl);

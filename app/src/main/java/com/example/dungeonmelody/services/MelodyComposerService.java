@@ -83,32 +83,4 @@ public class MelodyComposerService {
                 )
                 .forEach(t -> t.ClearProgresses());
     }
-
-    public SeekBar.OnSeekBarChangeListener GetFireActionOnRewindBackListener(Consumer<Integer> action)
-    {
-        return new SeekBar.OnSeekBarChangeListener(){
-
-            private int _previousProgress = -1;
-
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                if(progress < _previousProgress)
-                {
-                    action.accept(progress);
-                }
-
-                _previousProgress = progress;
-            }
-
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-
-            }
-
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-
-            }
-        };
-    }
 }
