@@ -91,34 +91,25 @@ public class CreateMelodyComposeActivity extends YouTubeBaseActivity
     }
 
     private View.OnClickListener GetStartButtonOnClickListener() {
-        return new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                _youTubePlayer.play();
-                _seekBar.setEnabled(true);
-                _markerButton.setEnabled(true);
-                _breakButton.setEnabled(true);
-            }
+        return v -> {
+            _youTubePlayer.play();
+            _seekBar.setEnabled(true);
+            _markerButton.setEnabled(true);
+            _breakButton.setEnabled(true);
         };
     }
 
     private View.OnClickListener GetBreakButtonOnClickListener() {
-        return new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                _melodyComposerService.SetBreak(_youTubePlayer.getCurrentTimeMillis());
-                UpdateTabsOnView();
-            }
+        return v -> {
+            _melodyComposerService.SetBreak(_youTubePlayer.getCurrentTimeMillis());
+            UpdateTabsOnView();
         };
     }
 
     private View.OnClickListener GetMarkerButtonOnClickListener() {
-        return new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                _melodyComposerService.SetMarker(_youTubePlayer.getCurrentTimeMillis());
-                UpdateTabsOnView();
-            }
+        return v -> {
+            _melodyComposerService.SetMarker(_youTubePlayer.getCurrentTimeMillis());
+            UpdateTabsOnView();
         };
     }
 
@@ -141,8 +132,9 @@ public class CreateMelodyComposeActivity extends YouTubeBaseActivity
                 _seekBarRefreshTask.execute();
                 _seekBar.setOnSeekBarChangeListener(new MultipleOnSeekBarChangeListener(Arrays.asList(
                         new UpdatePlayerProgressOnSeekBarChangeAction(_youTubePlayer),
-                        _melodyComposerService.GetClearTabProgressesOnProgresRewindBackListener(),
-                        _melodyComposerService.GetFireActionOnRewindBackListener(() -> UpdateTabsOnView())
+                        _melodyComposerService.GetFireActionOnRewindBackListener((progress) -> _melodyComposerService.Break()),
+                        _melodyComposerService.GetFireActionOnRewindBackListener((progress) -> _melodyComposerService.ClearTabProgressesAfterProgress(progress)),
+                        _melodyComposerService.GetFireActionOnRewindBackListener((progress) -> UpdateTabsOnView())
                 )));
 
                 _youTubePlayer.cueVideo(CreateMelodyData.VideoUrl);

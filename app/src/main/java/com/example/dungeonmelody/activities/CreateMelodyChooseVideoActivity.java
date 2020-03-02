@@ -50,15 +50,12 @@ public class CreateMelodyChooseVideoActivity extends YouTubeBaseActivity {
     }
 
     private View.OnClickListener GetNextButtonClickListener() {
-        return new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String videoUrl = _videoUrlText.getText().toString();
-                CreateMelodyData.VideoUrl = videoUrl;
+        return v -> {
+            String videoUrl = _videoUrlText.getText().toString();
+            CreateMelodyData.VideoUrl = videoUrl;
 
-                Intent intent = new Intent(CreateMelodyChooseVideoActivity.this, CreateMelodyEnterTabsActivity.class);
-                startActivity(intent);
-            }
+            Intent intent = new Intent(CreateMelodyChooseVideoActivity.this, CreateMelodyEnterTabsActivity.class);
+            startActivity(intent);
         };
     }
 

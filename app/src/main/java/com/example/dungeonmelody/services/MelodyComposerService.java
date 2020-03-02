@@ -11,6 +11,7 @@ import com.example.dungeonmelody.data.TabPart;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Optional;
+import java.util.function.Consumer;
 import java.util.stream.Stream;
 
 public class MelodyComposerService {
@@ -63,48 +64,27 @@ public class MelodyComposerService {
         if(_isRecording)
         {
             _recordedTabPart.ProgressEnd = progress;
-            _isRecording = false;
-            _recordedTabPart = null;
+            Break();
         }
     }
 
-    public SeekBar.OnSeekBarChangeListener GetClearTabProgressesOnProgresRewindBackListener()
+    public void Break()
     {
-        return new SeekBar.OnSeekBarChangeListener(){
-
-            private int _previousProgress = -1;
-
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                if(progress < _previousProgress)
-                {
-                    _tabParts.stream()
-                            .filter(t ->
-                                    (t.ProgressStart != null && t.ProgressStart > progress) ||
-                                    (t.ProgressEnd != null && t.ProgressEnd > progress && t.ProgressStart < progress)
-                            )
-                            .forEach(t -> t.ClearProgresses());
-
-                    _recordedTabPart = null;
-                    _isRecording = false;
-                }
-
-                _previousProgress = progress;
-            }
-
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-
-            }
-
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-
-            }
-        };
+        _isRecording = false;
+        _recordedTabPart = null;
     }
 
-    public SeekBar.OnSeekBarChangeListener GetFireActionOnRewindBackListener(Runnable action)
+    public void ClearTabProgressesAfterProgress(int progress)
+    {
+        _tabParts.stream()
+                .filter(t ->
+                        (t.ProgressStart != null && t.ProgressStart > progress) ||
+                                (t.ProgressEnd != null && t.ProgressEnd > progress && t.ProgressStart < progress)
+                )
+                .forEach(t -> t.ClearProgresses());
+    }
+
+    public SeekBar.OnSeekBarChangeListener GetFireActionOnRewindBackListener(Consumer<Integer> action)
     {
         return new SeekBar.OnSeekBarChangeListener(){
 
@@ -114,7 +94,7 @@ public class MelodyComposerService {
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 if(progress < _previousProgress)
                 {
-                    action.run();
+                    action.accept(progress);
                 }
 
                 _previousProgress = progress;

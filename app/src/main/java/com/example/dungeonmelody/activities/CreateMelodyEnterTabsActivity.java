@@ -57,28 +57,22 @@ public class CreateMelodyEnterTabsActivity extends AppCompatActivity {
     }
 
     private View.OnClickListener GetSeparatorButtonClickListener() {
-        return new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String text = _tabsText.getText().toString();
-                int cursorPosition = _tabsText.getSelectionStart();
-                text = text.substring(0, cursorPosition) + " [X] " + text.substring(cursorPosition);
-                _tabsText.setText(text);
-                _tabsText.setSelection(cursorPosition);
-            }
+        return v -> {
+            String text = _tabsText.getText().toString();
+            int cursorPosition = _tabsText.getSelectionStart();
+            text = text.substring(0, cursorPosition) + " [X] " + text.substring(cursorPosition);
+            _tabsText.setText(text);
+            _tabsText.setSelection(cursorPosition);
         };
     }
 
     private View.OnClickListener GetNextButtonClickListener() {
-        return new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String tabs = _tabsText.getText().toString();
-                CreateMelodyData.TabsText = tabs;
+        return v -> {
+            String tabs = _tabsText.getText().toString();
+            CreateMelodyData.TabsText = tabs;
 
-                Intent intent = new Intent(CreateMelodyEnterTabsActivity.this, CreateMelodyComposeActivity.class);
-                startActivity(intent);
-            }
+            Intent intent = new Intent(CreateMelodyEnterTabsActivity.this, CreateMelodyComposeActivity.class);
+            startActivity(intent);
         };
     }
 }
