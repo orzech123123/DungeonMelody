@@ -60,6 +60,8 @@ public class CreateMelodyComposeActivity extends YouTubeBaseActivity
         _breakButton.setOnClickListener(GetBreakButtonOnClickListener());
 
         _seekBar.setEnabled(false);
+        _markerButton.setEnabled(false);
+        _breakButton.setEnabled(false);
 
         _melodyComposerService = new MelodyComposerService(CreateMelodyData.TabsText);
 
@@ -94,7 +96,8 @@ public class CreateMelodyComposeActivity extends YouTubeBaseActivity
             public void onClick(View v) {
                 _youTubePlayer.play();
                 _seekBar.setEnabled(true);
-                _melodyComposerService.Start();
+                _markerButton.setEnabled(true);
+                _breakButton.setEnabled(true);
             }
         };
     }

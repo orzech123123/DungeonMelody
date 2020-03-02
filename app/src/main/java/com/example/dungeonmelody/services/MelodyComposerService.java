@@ -34,10 +34,6 @@ public class MelodyComposerService {
         return _tabParts;
     }
 
-    public void Start()
-    {
-    }
-
     public void SetMarker(int progress)
     {
         Optional<TabPart> recordTabPartOptional = _tabParts.stream().filter(s -> s.ProgressStart == null).findFirst();
