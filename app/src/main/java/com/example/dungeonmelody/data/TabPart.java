@@ -8,6 +8,6 @@ public class TabPart {
     }
 
     public String Tabs;
-    public Integer StartProgress = null;
-    public Integer EndProgress = null;
+    public Integer ProgressStart = null;
+    public Integer ProgressEnd = null;
 }

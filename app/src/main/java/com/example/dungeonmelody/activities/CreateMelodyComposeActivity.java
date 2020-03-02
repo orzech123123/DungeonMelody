@@ -1,6 +1,14 @@
 package com.example.dungeonmelody.activities;
 
+import android.graphics.Color;
 import android.os.Bundle;
+import android.text.Html;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.SpannableStringBuilder;
+import android.text.Spanned;
+import android.text.style.ForegroundColorSpan;
+import android.text.style.StyleSpan;
 import android.view.View;
 import android.widget.Button;
 import android.widget.SeekBar;
@@ -55,6 +63,8 @@ public class CreateMelodyComposeActivity extends YouTubeBaseActivity
         _seekBar = findViewById(R.id.seekBar);
 
         _startButton.setOnClickListener(GetStartButtonOnClickListener());
+        _markerButton.setOnClickListener(GetMarkerButtonOnClickListener());
+        _breakButton.setOnClickListener(GetBreakButtonOnClickListener());
 
         _seekBar.setEnabled(false);
 
@@ -62,12 +72,27 @@ public class CreateMelodyComposeActivity extends YouTubeBaseActivity
 
         _youTubePlayerView.initialize(YouTubeConfig.GetApiKey(), GetPlayerOnInitListener());
 
-        //TODO move it somewhere..
+        UpdateTabsOnView();
+    }
+
+    private void UpdateTabsOnView() {
+        //TODO to bedzie zastapione innym rysowaniem/wyswietlaniem
+       String text = "";
         for (TabPart tabPart: _melodyComposerService.GetTabParts()) {
-            String text = ((TextView) findViewById(R.id.textView)).getText().toString();
-            text = text + tabPart.Tabs + "\n";
-            ((TextView) findViewById(R.id.textView)).setText(text);
+            String tabPartText = tabPart.Tabs + "<br />";
+            String color = "";
+            if(tabPart.ProgressEnd != null)
+            {
+                color = "green";
+            }
+            else if(tabPart.ProgressStart != null)
+            {
+                color = "blue";
+            }
+
+            text = text + "<font color='"+color+"'>" + tabPartText + "</font>";
         }
+        ((TextView) findViewById(R.id.textView)).setText(Html.fromHtml(text), TextView.BufferType.SPANNABLE);
     }
 
     private View.OnClickListener GetStartButtonOnClickListener() {
@@ -77,6 +102,25 @@ public class CreateMelodyComposeActivity extends YouTubeBaseActivity
                 _youTubePlayer.play();
                 _seekBar.setEnabled(true);
                 _melodyComposerService.Start();
+            }
+        };
+    }
+
+    private View.OnClickListener GetBreakButtonOnClickListener() {
+        return new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                _melodyComposerService.SetBreak(_youTubePlayer.getCurrentTimeMillis());
+            }
+        };
+    }
+
+    private View.OnClickListener GetMarkerButtonOnClickListener() {
+        return new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                _melodyComposerService.SetMarker(_youTubePlayer.getCurrentTimeMillis());
+                UpdateTabsOnView();
             }
         };
     }
