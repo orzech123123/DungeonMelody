@@ -34,6 +34,12 @@ public class CreateMelodyEnterTabsActivity extends AppCompatActivity {
         _tabsText.addTextChangedListener(GetTabsChangedListener());
 
         _nextButton.setEnabled(false);
+        TurnOffOnNextButtonIfTabsFilled();
+    }
+
+    private void TurnOffOnNextButtonIfTabsFilled(){
+        String tabs = _tabsText.getText().toString();
+        _nextButton.setEnabled(!TextUtils.isEmpty(tabs));
     }
 
     private TextWatcher GetTabsChangedListener() {
@@ -45,8 +51,7 @@ public class CreateMelodyEnterTabsActivity extends AppCompatActivity {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                String tabs = _tabsText.getText().toString();
-                _nextButton.setEnabled(!TextUtils.isEmpty(tabs));
+                TurnOffOnNextButtonIfTabsFilled();
             }
 
             @Override

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingLeft="16dp"
@@ -10,7 +10,7 @@
         android:id="@+id/youtubePlayer"
         class="com.google.android.youtube.player.YouTubePlayerView"
         android:layout_width="200dp"
-        android:layout_height="120dp"
+        android:layout_height="160dp"
         android:layout_marginTop="34dp"
         android:layout_marginBottom="0dp"
         android:padding="0dp" />
@@ -20,27 +20,31 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
-    <Button
-        android:id="@+id/startButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Start" />
+    <TableRow>
 
-    <Button
-        android:id="@+id/markerButton"
-        android:layout_width="wrap_content"
-        android:layout_height="60dp"
-        android:text="Marker" />
+        <Button
+            android:id="@+id/markerButton"
+            android:layout_width="wrap_content"
+            android:layout_height="60dp"
+            android:text="Marker" />
 
-    <Button
-        android:id="@+id/breakButton"
-        android:layout_width="77dp"
-        android:layout_height="60dp"
-        android:text="Break" />
+        <Button
+            android:id="@+id/breakButton"
+            android:layout_width="77dp"
+            android:layout_height="60dp"
+            android:text="Break" />
+
+        <Button
+            android:id="@+id/saveButton"
+            android:layout_width="77dp"
+            android:layout_height="60dp"
+            android:text="Save" />
+
+    </TableRow>
 
     <TextView
         android:id="@+id/textView"
         android:layout_width="match_parent"
         android:layout_height="162dp" />
 
-</LinearLayout>
+</TableLayout>

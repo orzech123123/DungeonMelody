@@ -1,18 +1,9 @@
 package com.example.dungeonmelody.services;
 
-import android.app.ActionBar;
-import android.os.Build;
-import android.widget.SeekBar;
-
-import androidx.annotation.RequiresApi;
-
 import com.example.dungeonmelody.data.TabPart;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Optional;
-import java.util.function.Consumer;
-import java.util.stream.Stream;
 
 public class MelodyComposerService {
 
@@ -64,11 +55,11 @@ public class MelodyComposerService {
         if(_isRecording)
         {
             _recordedTabPart.ProgressEnd = progress;
-            Break();
+            StopRecording();
         }
     }
 
-    public void Break()
+    private void StopRecording()
     {
         _isRecording = false;
         _recordedTabPart = null;
@@ -82,5 +73,13 @@ public class MelodyComposerService {
                                 (t.ProgressEnd != null && t.ProgressEnd > progress && t.ProgressStart < progress)
                 )
                 .forEach(t -> t.ClearProgresses());
+    }
+
+    public void HandleRewindBack(Integer progress) {
+        if(_isRecording && progress < _recordedTabPart.ProgressStart)
+        {
+            _recordedTabPart.ClearProgresses();
+            StopRecording();
+        }
     }
 }

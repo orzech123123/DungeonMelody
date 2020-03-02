@@ -24,15 +24,14 @@ import com.google.android.youtube.player.YouTubePlayer;
 import com.google.android.youtube.player.YouTubePlayerView;
 
 import java.util.Arrays;
-import java.util.function.Consumer;
 
 public class CreateMelodyComposeActivity extends YouTubeBaseActivity
 {
     private YouTubePlayer _youTubePlayer;
     private YouTubePlayerView _youTubePlayerView;
     private Button _markerButton;
-    private Button _startButton;
     private Button _breakButton;
+    private Button _saveButton;
     private SeekBar _seekBar;
     private UpdateSeekBarProgressTask _seekBarRefreshTask;
     private MelodyComposerService _melodyComposerService;
@@ -53,17 +52,14 @@ public class CreateMelodyComposeActivity extends YouTubeBaseActivity
 
         _youTubePlayerView = findViewById(R.id.youtubePlayer);
         _markerButton = findViewById(R.id.markerButton);
-        _startButton = findViewById(R.id.startButton);
         _breakButton = findViewById(R.id.breakButton);
+        _saveButton = findViewById(R.id.saveButton);
         _seekBar = findViewById(R.id.seekBar);
 
-        _startButton.setOnClickListener(GetStartButtonOnClickListener());
         _markerButton.setOnClickListener(GetMarkerButtonOnClickListener());
         _breakButton.setOnClickListener(GetBreakButtonOnClickListener());
 
-        _seekBar.setEnabled(false);
-        _markerButton.setEnabled(false);
-        _breakButton.setEnabled(false);
+        SetUiEnabled(false);
 
         _melodyComposerService = new MelodyComposerService(CreateMelodyData.TabsText);
 
@@ -92,15 +88,6 @@ public class CreateMelodyComposeActivity extends YouTubeBaseActivity
         ((TextView) findViewById(R.id.textView)).setText(Html.fromHtml(text), TextView.BufferType.SPANNABLE);
     }
 
-    private View.OnClickListener GetStartButtonOnClickListener() {
-        return v -> {
-            _youTubePlayer.play();
-            _seekBar.setEnabled(true);
-            _markerButton.setEnabled(true);
-            _breakButton.setEnabled(true);
-        };
-    }
-
     private View.OnClickListener GetBreakButtonOnClickListener() {
         return v -> {
             _melodyComposerService.SetBreak(_youTubePlayer.getCurrentTimeMillis());
@@ -127,14 +114,15 @@ public class CreateMelodyComposeActivity extends YouTubeBaseActivity
                 _youTubePlayer = youTubePlayer;
 
                 _youTubePlayer.setPlayerStateChangeListener(new MultiplePlayerStateChangeListener(Arrays.asList(
-                        new SetSeekBarMaxProgressValueFromPlayerAction(_seekBar, _youTubePlayer)
+                        new SetSeekBarMaxProgressValueFromPlayerAction(_seekBar, _youTubePlayer),
+                        GetEnableButtonsOnPlayerPlay()
                 )));
 
                 _seekBarRefreshTask = new UpdateSeekBarProgressTask(_seekBar, _youTubePlayer);
                 _seekBarRefreshTask.execute();
                 _seekBar.setOnSeekBarChangeListener(new MultipleOnSeekBarChangeListener(Arrays.asList(
                         new UpdatePlayerProgressOnSeekBarChangeAction(_youTubePlayer),
-                        new RunOnSeekProgressRewindBackAction((progress) -> _melodyComposerService.Break()),
+                        new RunOnSeekProgressRewindBackAction((progress) -> _melodyComposerService.HandleRewindBack(progress)),
                         new RunOnSeekProgressRewindBackAction((progress) -> _melodyComposerService.ClearTabProgressesAfterProgress(progress)),
                         new RunOnSeekProgressRewindBackAction((progress) -> UpdateTabsOnView())
                 )));
@@ -147,5 +135,48 @@ public class CreateMelodyComposeActivity extends YouTubeBaseActivity
 
             }
         };
+    }
+
+    private YouTubePlayer.PlayerStateChangeListener GetEnableButtonsOnPlayerPlay()
+    {
+        return new YouTubePlayer.PlayerStateChangeListener() {
+            @Override
+            public void onLoading() {
+
+            }
+
+            @Override
+            public void onLoaded(String s) {
+
+            }
+
+            @Override
+            public void onAdStarted() {
+
+            }
+
+            @Override
+            public void onVideoStarted() {
+                SetUiEnabled(true);
+            }
+
+            @Override
+            public void onVideoEnded() {
+
+            }
+
+            @Override
+            public void onError(YouTubePlayer.ErrorReason errorReason) {
+
+            }
+        };
+    }
+
+    private void SetUiEnabled(boolean enable)
+    {
+        _seekBar.setEnabled(enable);
+        _markerButton.setEnabled(enable);
+        _breakButton.setEnabled(enable);
+        _saveButton.setEnabled(enable);
     }
 }

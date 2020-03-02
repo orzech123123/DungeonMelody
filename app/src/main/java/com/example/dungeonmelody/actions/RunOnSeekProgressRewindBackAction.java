@@ -1,5 +1,6 @@
 package com.example.dungeonmelody.actions;
 
+import android.util.Pair;
 import android.widget.SeekBar;
 
 import com.google.android.youtube.player.YouTubePlayer;
@@ -13,7 +14,6 @@ public class RunOnSeekProgressRewindBackAction implements SeekBar.OnSeekBarChang
 
     public RunOnSeekProgressRewindBackAction(Consumer<Integer> progressConsumer)
     {
-
         _progressConsumer = progressConsumer;
     }
 
