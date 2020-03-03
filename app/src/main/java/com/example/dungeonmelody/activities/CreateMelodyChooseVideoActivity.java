@@ -13,6 +13,7 @@ import android.widget.EditText;
 import androidx.annotation.RequiresApi;
 
 import com.example.dungeonmelody.R;
+import com.example.dungeonmelody.backgroundTasks.RunAsyncTask;
 import com.example.dungeonmelody.configuration.YouTubeConfig;
 import com.example.dungeonmelody.data.CreateMelodyData;
 import com.google.android.youtube.player.YouTubeBaseActivity;
@@ -21,6 +22,7 @@ import com.google.android.youtube.player.YouTubePlayer;
 import com.google.android.youtube.player.YouTubePlayerView;
 
 import java.io.IOException;
+import java.util.function.Consumer;
 
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -76,7 +78,7 @@ public class CreateMelodyChooseVideoActivity extends YouTubeBaseActivity {
                 String videoUrl = _videoUrlText.getText().toString();
                 _youTubePlayer.loadVideo(videoUrl);
 
-                TurnOffOnNextButtonIfVideoExist().execute();
+                new RunAsyncTask(() -> TurnOffOnNextButtonIfVideoExist(), false).execute();
             }
 
             @Override
@@ -86,33 +88,19 @@ public class CreateMelodyChooseVideoActivity extends YouTubeBaseActivity {
         };
     }
 
-    private AsyncTask TurnOffOnNextButtonIfVideoExist()
+    private void TurnOffOnNextButtonIfVideoExist()
     {
-        return new AsyncTask() {
-            @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-            @Override
-            protected Object doInBackground(Object[] objects) {
+        OkHttpClient client = new OkHttpClient();
+        String url = _videoUrlText.getText().toString();
+        Request request = new Request.Builder()
+                .url("https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=" + url)
+                .build();
 
-                OkHttpClient client = new OkHttpClient();
-                String url = _videoUrlText.getText().toString();
-                Request request = new Request.Builder()
-                        .url("https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=" + url)
-                        .build();
-
-                try (Response response = client.newCall(request).execute()) {
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            _nextButton.setEnabled(response.code() == 200);
-                        }
-                    });
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-
-                return null;
-            }
-        };
+        try (Response response = client.newCall(request).execute()) {
+            runOnUiThread(() -> _nextButton.setEnabled(response.code() == 200));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private YouTubePlayer.OnInitializedListener GetPlayerOnInitListener(){

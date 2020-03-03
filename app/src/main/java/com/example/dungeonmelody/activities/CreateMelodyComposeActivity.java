@@ -1,21 +1,16 @@
 package com.example.dungeonmelody.activities;
 
 import android.content.Intent;
-import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 import android.text.Html;
 import android.view.View;
 import android.widget.Button;
 import android.widget.SeekBar;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import androidx.annotation.RequiresApi;
 
 import com.example.dungeonmelody.R;
 import com.example.dungeonmelody.actions.RunOnSeekProgressRewindBackAction;
-import com.example.dungeonmelody.backgroundTasks.UpdateSeekBarProgressTask;
+import com.example.dungeonmelody.backgroundTasks.RunAsyncTask;
 import com.example.dungeonmelody.configuration.YouTubeConfig;
 import com.example.dungeonmelody.actions.SetSeekBarMaxProgressValueFromPlayerAction;
 import com.example.dungeonmelody.actions.UpdatePlayerProgressOnSeekBarChangeAction;
@@ -29,12 +24,7 @@ import com.google.android.youtube.player.YouTubeInitializationResult;
 import com.google.android.youtube.player.YouTubePlayer;
 import com.google.android.youtube.player.YouTubePlayerView;
 
-import java.io.IOException;
 import java.util.Arrays;
-
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
 
 public class CreateMelodyComposeActivity extends YouTubeBaseActivity
 {
@@ -44,15 +34,12 @@ public class CreateMelodyComposeActivity extends YouTubeBaseActivity
     private Button _breakButton;
     private Button _saveButton;
     private SeekBar _seekBar;
-    private UpdateSeekBarProgressTask _seekBarRefreshTask;
+    private RunAsyncTask _uiRefreshTask;
     private MelodyComposerService _melodyComposerService;
 
     @Override
     protected void onDestroy() {
-        if(_seekBarRefreshTask != null)
-        {
-            _seekBarRefreshTask.cancel(true);
-        }
+        _uiRefreshTask.cancel(true);
         super.onDestroy();
     }
 
@@ -78,6 +65,12 @@ public class CreateMelodyComposeActivity extends YouTubeBaseActivity
         _youTubePlayerView.initialize(YouTubeConfig.GetApiKey(), GetPlayerOnInitListener());
 
         UpdateTabsOnView();
+
+        _uiRefreshTask = new RunAsyncTask(() -> {
+            TurnOfOnUi();
+            UpdateSeekBarProgress();
+        }, true);
+        _uiRefreshTask.execute();
     }
 
     private void UpdateTabsOnView() {
@@ -108,13 +101,10 @@ public class CreateMelodyComposeActivity extends YouTubeBaseActivity
     }
     private View.OnClickListener GetSaveButtonOnClickListener() {
         return v -> {
-            if(_melodyComposerService.IsReadyToSave())
-            {
-                _melodyComposerService.SaveMelody();
+            _melodyComposerService.SaveMelody();
 
-                Intent intent = new Intent(CreateMelodyComposeActivity.this, MenuActivity.class);
-                startActivity(intent);
-            }
+            Intent intent = new Intent(CreateMelodyComposeActivity.this, MenuActivity.class);
+            startActivity(intent);
         };
     }
 
@@ -137,12 +127,9 @@ public class CreateMelodyComposeActivity extends YouTubeBaseActivity
                 _youTubePlayer = youTubePlayer;
 
                 _youTubePlayer.setPlayerStateChangeListener(new MultiplePlayerStateChangeListener(Arrays.asList(
-                        new SetSeekBarMaxProgressValueFromPlayerAction(_seekBar, _youTubePlayer),
-                        GetEnableButtonsOnPlayerPlay()
+                        new SetSeekBarMaxProgressValueFromPlayerAction(_seekBar, _youTubePlayer)
                 )));
 
-                _seekBarRefreshTask = new UpdateSeekBarProgressTask(_seekBar, _youTubePlayer);
-                _seekBarRefreshTask.execute();
                 _seekBar.setOnSeekBarChangeListener(new MultipleOnSeekBarChangeListener(Arrays.asList(
                         new UpdatePlayerProgressOnSeekBarChangeAction(_youTubePlayer),
                         new RunOnSeekProgressRewindBackAction((progress) -> _melodyComposerService.HandleRewindBack(progress)),
@@ -151,6 +138,7 @@ public class CreateMelodyComposeActivity extends YouTubeBaseActivity
                 )));
 
                 _youTubePlayer.cueVideo(CreateMelodyData.VideoUrl);
+                _seekBar.setEnabled(true);
             }
 
             @Override
@@ -160,39 +148,40 @@ public class CreateMelodyComposeActivity extends YouTubeBaseActivity
         };
     }
 
-    private YouTubePlayer.PlayerStateChangeListener GetEnableButtonsOnPlayerPlay()
-    {
-        return new YouTubePlayer.PlayerStateChangeListener() {
-            @Override
-            public void onLoading() {
+    private void UpdateSeekBarProgress(){
+        if(_seekBar == null || _youTubePlayer == null)
+        {
+            return;
+        }
 
-            }
+        runOnUiThread(() -> {
+            _seekBar.setProgress(_youTubePlayer.getCurrentTimeMillis());
+        });
 
-            @Override
-            public void onLoaded(String s) {
+        try {
+            Thread.sleep(100);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
 
-            }
+    private void TurnOfOnUi() {
+        if(_youTubePlayer == null)
+        {
+            return;
+        }
 
-            @Override
-            public void onAdStarted() {
+        runOnUiThread(()->{
+            _markerButton.setEnabled(_youTubePlayer.isPlaying() && _melodyComposerService.HasAnyUnstartedTabPart());
+            _breakButton.setEnabled(_youTubePlayer.isPlaying() && _melodyComposerService.IsRecording());
+            _saveButton.setEnabled(_melodyComposerService.AreAllTabPartFilled());
+        });
 
-            }
-
-            @Override
-            public void onVideoStarted() {
-                SetUiEnabled(true);
-            }
-
-            @Override
-            public void onVideoEnded() {
-
-            }
-
-            @Override
-            public void onError(YouTubePlayer.ErrorReason errorReason) {
-
-            }
-        };
+        try {
+            Thread.sleep(100);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     private void SetUiEnabled(boolean enable)

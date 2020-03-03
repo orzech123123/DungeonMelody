@@ -26,15 +26,22 @@ public class MelodyComposerService {
         return _tabParts;
     }
 
+    private TabPart GetNextUnstartedTabPart(){
+        Optional<TabPart> tabPart = _tabParts.stream().filter(s -> s.ProgressStart == null).findFirst();
+        if(tabPart.isPresent())
+        {
+            return tabPart.get();
+        }
+        return null;
+    }
+
     public void SetMarker(int progress)
     {
-        Optional<TabPart> recordTabPartOptional = _tabParts.stream().filter(s -> s.ProgressStart == null).findFirst();
-        if(!recordTabPartOptional.isPresent())
+        TabPart recordTabPart = GetNextUnstartedTabPart();
+        if(recordTabPart == null)
         {
             return;
         }
-
-        TabPart recordTabPart = recordTabPartOptional.get();
 
         if(!_isRecording)
         {
@@ -87,7 +94,15 @@ public class MelodyComposerService {
 
     }
 
-    public boolean IsReadyToSave() {
+    public boolean AreAllTabPartFilled() {
         return _tabParts.stream().allMatch(t -> t.IsFilled());
+    }
+
+    public boolean HasAnyUnstartedTabPart() {
+        return GetNextUnstartedTabPart() != null;
+    }
+
+    public boolean IsRecording() {
+        return _isRecording;
     }
 }
