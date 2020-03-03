@@ -155,7 +155,10 @@ public class CreateMelodyComposeActivity extends YouTubeBaseActivity
         }
 
         runOnUiThread(() -> {
-            _seekBar.setProgress(_youTubePlayer.getCurrentTimeMillis());
+            try{
+                _seekBar.setProgress(_youTubePlayer.getCurrentTimeMillis());
+            }
+            catch (IllegalStateException e){}//youtube released
         });
 
         try {
@@ -172,9 +175,12 @@ public class CreateMelodyComposeActivity extends YouTubeBaseActivity
         }
 
         runOnUiThread(()->{
-            _markerButton.setEnabled(_youTubePlayer.isPlaying() && _melodyComposerService.HasAnyUnstartedTabPart());
-            _breakButton.setEnabled(_youTubePlayer.isPlaying() && _melodyComposerService.IsRecording());
-            _saveButton.setEnabled(_melodyComposerService.AreAllTabPartFilled());
+            try{
+                _markerButton.setEnabled(_youTubePlayer.isPlaying() && _melodyComposerService.HasAnyUnstartedTabPart());
+                _breakButton.setEnabled(_youTubePlayer.isPlaying() && _melodyComposerService.IsRecording());
+                _saveButton.setEnabled(_melodyComposerService.AreAllTabPartFilled());
+            }
+            catch (IllegalStateException e){}//youtube released
         });
 
         try {
