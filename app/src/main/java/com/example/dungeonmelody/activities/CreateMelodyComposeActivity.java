@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.dungeonmelody.R;
 import com.example.dungeonmelody.actions.RunOnSeekProgressRewindBackAction;
@@ -106,6 +107,8 @@ public class CreateMelodyComposeActivity extends YouTubeBaseActivity
     private View.OnClickListener GetSaveButtonOnClickListener() {
         return v -> {
             new RunAsyncTask(() -> _melodyComposerService.SaveMelody(CreateMelodyData.VideoUrl), false).execute();
+
+            Toast.makeText(getApplicationContext(), "Melody has been added!", Toast.LENGTH_SHORT).show();
 
             Intent intent = new Intent(CreateMelodyComposeActivity.this, MenuActivity.class);
             startActivity(intent);

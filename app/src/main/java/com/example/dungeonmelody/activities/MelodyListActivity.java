@@ -2,7 +2,11 @@ package com.example.dungeonmelody.activities;
 
 import android.app.ListActivity;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ListView;
+import android.widget.Toast;
 
 import com.example.dungeonmelody.R;
 import com.example.dungeonmelody.backgroundTasks.RunAsyncTask;
@@ -19,10 +23,7 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 public class MelodyListActivity extends ListActivity {
-
-    static final String[] FRUITS = new String[]{"Apple", "Avocado", "Banana",
-            "Blueberry", "Coconut", "Durian", "Guava", "Kiwifruit",
-            "Jackfruit", "Mango", "Olive", "Pear", "Sugar-apple"};
+    private String[] _melodyIds;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -30,18 +31,10 @@ public class MelodyListActivity extends ListActivity {
 
         new RunAsyncTask(() -> DownloadAndSetMelodiesOnList(), false).execute();
 
-//        ListView listView = getListView();
-//        listView.setTextFilterEnabled(true);
-//
-//        listView.setOnItemClickListener(new OnItemClickListener() {
-//            public void onItemClick(AdapterView<?> parent, View view,
-//                                    int position, long id) {
-//                // When clicked, show a toast with the TextView text
-//                Toast.makeText(getApplicationContext(),
-//                        ((TextView) view).getText(), Toast.LENGTH_SHORT).show();
-//            }
-//        });
-
+        ListView listView = getListView();
+        listView.setOnItemClickListener((parent, view, position, id) -> {
+            Toast.makeText(getApplicationContext(), _melodyIds[position], Toast.LENGTH_SHORT).show();
+        });
     }
 
     //TODO ugly long method to refactor
@@ -65,7 +58,7 @@ public class MelodyListActivity extends ListActivity {
                         jsonObjects.add((JSONObject) jsonArray.get(i));
                     }
 
-                    String[] melodyIds = jsonObjects.stream()
+                    _melodyIds = jsonObjects.stream()
                             .map(j -> {
                                 try {
                                     return j.getString("melodyId");
@@ -77,7 +70,7 @@ public class MelodyListActivity extends ListActivity {
                             .distinct()
                             .toArray(String[]::new);
 
-                    setListAdapter(new ArrayAdapter<String>(this, R.layout.activity_melody_list, melodyIds));
+                    setListAdapter(new ArrayAdapter<>(this, R.layout.activity_melody_list, _melodyIds));
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
