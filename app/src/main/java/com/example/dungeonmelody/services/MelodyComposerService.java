@@ -2,8 +2,18 @@ package com.example.dungeonmelody.services;
 
 import com.example.dungeonmelody.data.TabPart;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Optional;
+import java.util.UUID;
+
+import okhttp3.FormBody;
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
+import okio.BufferedSink;
 
 public class MelodyComposerService {
 
@@ -90,8 +100,26 @@ public class MelodyComposerService {
         }
     }
 
-    public void SaveMelody() {
+    public void SaveMelody(String videoUrl) {
+        String melodyId = UUID.randomUUID().toString();
 
+        OkHttpClient client = new OkHttpClient();
+
+        for (TabPart tabPart : _tabParts) {
+            String json = tabPart.ToJson(videoUrl, melodyId);
+
+            Request request = new Request.Builder()
+                    .url("https://dungeonmelody-0441.restdb.io/rest/tabs")
+                    .header("x-apikey", "8733ef5f451ad34dbda6155cb2142c01bb423")
+                    .header("Content-Type", "application/json")
+                    .post(RequestBody.create(MediaType.parse("application/json; charset=utf-8"), json))
+                    .build();
+
+            try (Response response = client.newCall(request).execute()) {
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     public boolean AreAllTabPartFilled() {

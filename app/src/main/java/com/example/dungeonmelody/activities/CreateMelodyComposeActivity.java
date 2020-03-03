@@ -1,8 +1,10 @@
 package com.example.dungeonmelody.activities;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Html;
+import android.text.method.ScrollingMovementMethod;
 import android.view.View;
 import android.widget.Button;
 import android.widget.SeekBar;
@@ -54,6 +56,8 @@ public class CreateMelodyComposeActivity extends YouTubeBaseActivity
         _saveButton = findViewById(R.id.saveButton);
         _seekBar = findViewById(R.id.seekBar);
 
+        ((TextView) findViewById(R.id.textView)).setMovementMethod(new ScrollingMovementMethod());
+
         _markerButton.setOnClickListener(GetMarkerButtonOnClickListener());
         _breakButton.setOnClickListener(GetBreakButtonOnClickListener());
         _saveButton.setOnClickListener(GetSaveButtonOnClickListener());
@@ -81,11 +85,11 @@ public class CreateMelodyComposeActivity extends YouTubeBaseActivity
             String color = "";
             if(tabPart.ProgressEnd != null)
             {
-                color = "green";
+                color = "blue";
             }
             else if(tabPart.ProgressStart != null)
             {
-                color = "blue";
+                color = "green";
             }
 
             text = text + "<font color='"+color+"'>" + tabPartText + "</font>";
@@ -101,10 +105,11 @@ public class CreateMelodyComposeActivity extends YouTubeBaseActivity
     }
     private View.OnClickListener GetSaveButtonOnClickListener() {
         return v -> {
-            _melodyComposerService.SaveMelody();
+            new RunAsyncTask(() -> _melodyComposerService.SaveMelody(CreateMelodyData.VideoUrl), false).execute();
 
             Intent intent = new Intent(CreateMelodyComposeActivity.this, MenuActivity.class);
             startActivity(intent);
+            finish();
         };
     }
 
