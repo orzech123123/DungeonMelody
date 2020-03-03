@@ -16,9 +16,14 @@ public class MenuActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu);
 
-        Button button = findViewById(R.id.createMelodyButton);
-        button.setOnClickListener(v -> {
+        Button createMelodyButton = findViewById(R.id.createMelodyButton);
+        createMelodyButton.setOnClickListener(v -> {
             Intent intent = new Intent(MenuActivity.this, CreateMelodyChooseVideoActivity.class);
+            startActivity(intent);
+        });
+        Button melodyListButton = findViewById(R.id.melodyListButton);
+        melodyListButton.setOnClickListener(v -> {
+            Intent intent = new Intent(MenuActivity.this, MelodyListActivity.class);
             startActivity(intent);
         });
     }

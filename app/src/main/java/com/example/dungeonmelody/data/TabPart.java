@@ -38,4 +38,18 @@ public class TabPart {
             return "{}";
         }
     }
+
+    public static TabPart FromJson(String json)
+    {
+//        try {
+//            JSONObject obj = new JSONObject(json);
+//            obj.
+//            TabPart tabPart = new TabPart(obj.getString("tabs"));
+//            tabPart.ProgressStart = obj.getInt("progressStart");
+//            tabPart.ProgressEnd = obj.getInt("progressStart");
+//        } catch (JSONException e) {
+//            e.printStackTrace();
+//        }
+        return null;
+    }
 }
