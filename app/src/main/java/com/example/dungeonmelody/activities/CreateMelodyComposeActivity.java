@@ -110,7 +110,8 @@ public class CreateMelodyComposeActivity extends YouTubeBaseActivity
 
             Toast.makeText(getApplicationContext(), "Melody has been added!", Toast.LENGTH_SHORT).show();
 
-            Intent intent = new Intent(CreateMelodyComposeActivity.this, MenuActivity.class);
+            Intent intent = new Intent(getApplicationContext(), MenuActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);
             finish();
         };
