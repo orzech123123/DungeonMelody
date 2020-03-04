@@ -1,8 +1,6 @@
 package com.example.dungeonmelody.activities;
 
 import android.content.Intent;
-import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -10,11 +8,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
-import androidx.annotation.RequiresApi;
-
 import com.example.dungeonmelody.R;
 import com.example.dungeonmelody.backgroundTasks.RunAsyncTask;
-import com.example.dungeonmelody.configuration.YouTubeConfig;
+import com.example.dungeonmelody.configuration.ApisConfig;
 import com.example.dungeonmelody.data.CreateMelodyData;
 import com.google.android.youtube.player.YouTubeBaseActivity;
 import com.google.android.youtube.player.YouTubeInitializationResult;
@@ -22,7 +18,6 @@ import com.google.android.youtube.player.YouTubePlayer;
 import com.google.android.youtube.player.YouTubePlayerView;
 
 import java.io.IOException;
-import java.util.function.Consumer;
 
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -44,7 +39,7 @@ public class CreateMelodyChooseVideoActivity extends YouTubeBaseActivity {
         _videoUrlText = findViewById(R.id.videoUrlText);
         _nextButton = findViewById(R.id.separatorButton);
 
-        _youTubePlayerView.initialize(YouTubeConfig.GetApiKey(), GetPlayerOnInitListener());
+        _youTubePlayerView.initialize(ApisConfig.GetYoutubeApiKey(), GetPlayerOnInitListener());
         _videoUrlText.addTextChangedListener(GetVideoUrlChangeListener());
 
         _nextButton.setEnabled(false);

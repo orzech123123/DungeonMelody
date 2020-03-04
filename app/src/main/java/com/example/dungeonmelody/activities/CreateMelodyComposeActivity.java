@@ -1,7 +1,6 @@
 package com.example.dungeonmelody.activities;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Html;
 import android.text.method.ScrollingMovementMethod;
@@ -14,7 +13,7 @@ import android.widget.Toast;
 import com.example.dungeonmelody.R;
 import com.example.dungeonmelody.actions.RunOnSeekProgressRewindBackAction;
 import com.example.dungeonmelody.backgroundTasks.RunAsyncTask;
-import com.example.dungeonmelody.configuration.YouTubeConfig;
+import com.example.dungeonmelody.configuration.ApisConfig;
 import com.example.dungeonmelody.actions.SetSeekBarMaxProgressValueFromPlayerAction;
 import com.example.dungeonmelody.actions.UpdatePlayerProgressOnSeekBarChangeAction;
 import com.example.dungeonmelody.data.CreateMelodyData;
@@ -67,13 +66,19 @@ public class CreateMelodyComposeActivity extends YouTubeBaseActivity
 
         _melodyComposerService = new MelodyComposerService(CreateMelodyData.TabsText);
 
-        _youTubePlayerView.initialize(YouTubeConfig.GetApiKey(), GetPlayerOnInitListener());
+        _youTubePlayerView.initialize(ApisConfig.GetYoutubeApiKey(), GetPlayerOnInitListener());
 
         UpdateTabsOnView();
 
         _uiRefreshTask = new RunAsyncTask(() -> {
             TurnOfOnUi();
             UpdateSeekBarProgress();
+
+            try {
+                Thread.sleep(200);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }, true);
         _uiRefreshTask.execute();
     }
@@ -169,12 +174,6 @@ public class CreateMelodyComposeActivity extends YouTubeBaseActivity
             }
             catch (IllegalStateException e){}//youtube released
         });
-
-        try {
-            Thread.sleep(100);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
     }
 
     private void TurnOfOnUi() {
@@ -191,12 +190,6 @@ public class CreateMelodyComposeActivity extends YouTubeBaseActivity
             }
             catch (IllegalStateException e){}//youtube released
         });
-
-        try {
-            Thread.sleep(100);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
     }
 
     private void SetUiEnabled(boolean enable)

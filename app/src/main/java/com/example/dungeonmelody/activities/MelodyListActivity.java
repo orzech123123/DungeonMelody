@@ -11,6 +11,8 @@ import android.widget.Toast;
 
 import com.example.dungeonmelody.R;
 import com.example.dungeonmelody.backgroundTasks.RunAsyncTask;
+import com.example.dungeonmelody.configuration.ApisConfig;
+import com.example.dungeonmelody.data.PlayMelodyData;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -34,7 +36,7 @@ public class MelodyListActivity extends ListActivity {
 
         ListView listView = getListView();
         listView.setOnItemClickListener((parent, view, position, id) -> {
-//            Toast.makeText(getApplicationContext(), _melodyIds[position], Toast.LENGTH_SHORT).show();
+            PlayMelodyData.MelodyId = _melodyIds[position];
 
             Intent intent = new Intent(MelodyListActivity.this, PlayMelodyActivity.class);
             startActivity(intent);
@@ -46,7 +48,7 @@ public class MelodyListActivity extends ListActivity {
         OkHttpClient client = new OkHttpClient();
         Request request = new Request.Builder()
                 .url("https://dungeonmelody-0441.restdb.io/rest/tabs")
-                .header("x-apikey", "8733ef5f451ad34dbda6155cb2142c01bb423")
+                .header("x-apikey", ApisConfig.GetRestdbioApiKey())
                 .header("Content-Type", "application/json")
                 .get()
                 .build();

@@ -1,5 +1,6 @@
 package com.example.dungeonmelody.services;
 
+import com.example.dungeonmelody.configuration.ApisConfig;
 import com.example.dungeonmelody.data.TabPart;
 
 import java.io.IOException;
@@ -117,7 +118,7 @@ public class MelodyComposerService {
 
         Request request = new Request.Builder()
                 .url("https://dungeonmelody-0441.restdb.io/rest/tabs")
-                .header("x-apikey", "8733ef5f451ad34dbda6155cb2142c01bb423")
+                .header("x-apikey", ApisConfig.GetRestdbioApiKey())
                 .header("Content-Type", "application/json")
                 .post(RequestBody.create(MediaType.parse("application/json; charset=utf-8"), json))
                 .build();

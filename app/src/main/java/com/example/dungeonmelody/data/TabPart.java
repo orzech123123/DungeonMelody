@@ -39,17 +39,16 @@ public class TabPart {
         }
     }
 
-    public static TabPart FromJson(String json)
+    public static TabPart FromJson(JSONObject jsonObj)
     {
-//        try {
-//            JSONObject obj = new JSONObject(json);
-//            obj.
-//            TabPart tabPart = new TabPart(obj.getString("tabs"));
-//            tabPart.ProgressStart = obj.getInt("progressStart");
-//            tabPart.ProgressEnd = obj.getInt("progressStart");
-//        } catch (JSONException e) {
-//            e.printStackTrace();
-//        }
+        try {
+            TabPart tabPart = new TabPart(jsonObj.getString("tabs"));
+            tabPart.ProgressStart = jsonObj.getInt("progressStart");
+            tabPart.ProgressEnd = jsonObj.getInt("progressEnd");
+            return tabPart;
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
         return null;
     }
 }
