@@ -1,6 +1,7 @@
 package com.example.dungeonmelody.activities;
 
 import android.app.ListActivity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -33,7 +34,10 @@ public class MelodyListActivity extends ListActivity {
 
         ListView listView = getListView();
         listView.setOnItemClickListener((parent, view, position, id) -> {
-            Toast.makeText(getApplicationContext(), _melodyIds[position], Toast.LENGTH_SHORT).show();
+//            Toast.makeText(getApplicationContext(), _melodyIds[position], Toast.LENGTH_SHORT).show();
+
+            Intent intent = new Intent(MelodyListActivity.this, PlayMelodyActivity.class);
+            startActivity(intent);
         });
     }
 
