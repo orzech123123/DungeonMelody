@@ -105,20 +105,27 @@ public class MelodyComposerService {
 
         OkHttpClient client = new OkHttpClient();
 
+        String json = "[";
         for (TabPart tabPart : _tabParts) {
-            String json = tabPart.ToJson(videoUrl, melodyId);
-
-            Request request = new Request.Builder()
-                    .url("https://dungeonmelody-0441.restdb.io/rest/tabs")
-                    .header("x-apikey", "8733ef5f451ad34dbda6155cb2142c01bb423")
-                    .header("Content-Type", "application/json")
-                    .post(RequestBody.create(MediaType.parse("application/json; charset=utf-8"), json))
-                    .build();
-
-            try (Response response = client.newCall(request).execute()) {
-            } catch (IOException e) {
-                e.printStackTrace();
+            json += tabPart.ToJson(videoUrl, melodyId);
+            if(_tabParts.indexOf(tabPart) != _tabParts.size() - 1)
+            {
+                json += ",";
             }
+        }
+        json += "]";
+
+        Request request = new Request.Builder()
+                .url("https://dungeonmelody-0441.restdb.io/rest/tabs")
+                .header("x-apikey", "8733ef5f451ad34dbda6155cb2142c01bb423")
+                .header("Content-Type", "application/json")
+                .post(RequestBody.create(MediaType.parse("application/json; charset=utf-8"), json))
+                .build();
+
+        try (Response response = client.newCall(request).execute()) {
+            Integer a = 3;
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
