@@ -27,6 +27,7 @@ import okhttp3.Response;
 
 public class MelodyListActivity extends ListActivity {
     private String[] _melodyIds;
+    private String[] _titles;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -75,8 +76,19 @@ public class MelodyListActivity extends ListActivity {
                             })
                             .distinct()
                             .toArray(String[]::new);
+                    _titles = jsonObjects.stream()
+                            .map(j -> {
+                                try {
+                                    return j.getString("title");
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+                                return null;
+                            })
+                            .distinct()
+                            .toArray(String[]::new);
 
-                    setListAdapter(new ArrayAdapter<>(this, R.layout.activity_melody_list, _melodyIds));
+                    setListAdapter(new ArrayAdapter<>(this, R.layout.activity_melody_list, _titles));
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }

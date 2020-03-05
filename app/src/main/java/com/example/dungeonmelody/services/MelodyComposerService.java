@@ -3,6 +3,9 @@ package com.example.dungeonmelody.services;
 import com.example.dungeonmelody.configuration.ApisConfig;
 import com.example.dungeonmelody.data.TabPart;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Optional;
@@ -106,9 +109,11 @@ public class MelodyComposerService {
 
         OkHttpClient client = new OkHttpClient();
 
+        String title = GetVideoTitle(videoUrl);
+
         String json = "[";
         for (TabPart tabPart : _tabParts) {
-            json += tabPart.ToJson(videoUrl, melodyId);
+            json += tabPart.ToJson(videoUrl, melodyId, title);
             if(_tabParts.indexOf(tabPart) != _tabParts.size() - 1)
             {
                 json += ",";
@@ -128,6 +133,26 @@ public class MelodyComposerService {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    //TODO move it somewhere
+    private String GetVideoTitle(String videoUrl) {
+        OkHttpClient client = new OkHttpClient();
+
+        Request request = new Request.Builder()
+                .url("https://www.youtube.com/oembed?format=json&url=https://www.youtube.com/watch?v=" + videoUrl)
+                .get()
+                .build();
+
+        try (Response response = client.newCall(request).execute()) {
+            String json = response.body().string();
+            JSONObject jsonObj = new JSONObject(json);
+            return jsonObj.getString("title");
+        } catch (IOException | JSONException e) {
+            e.printStackTrace();
+        }
+
+        return null;
     }
 
     public boolean AreAllTabPartFilled() {

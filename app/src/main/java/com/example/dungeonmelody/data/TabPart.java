@@ -23,7 +23,7 @@ public class TabPart {
         return ProgressStart != null && ProgressEnd != null;
     }
 
-    public String ToJson(String videoUrl, String melodyId) {
+    public String ToJson(String videoUrl, String melodyId, String title) {
         JSONObject jsonObject= new JSONObject();
         try {
             jsonObject.put("melodyId", melodyId);
@@ -31,6 +31,7 @@ public class TabPart {
             jsonObject.put("tabs", Tabs);
             jsonObject.put("progressStart", ProgressStart);
             jsonObject.put("progressEnd", ProgressEnd);
+            jsonObject.put("title", title);
 
             return jsonObject.toString();
         } catch (JSONException e) {
