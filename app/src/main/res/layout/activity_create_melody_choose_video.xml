@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"/>
 
     <EditText
-        android:hint="YouTube video ID"
+        android:hint="Enter YouTube video ID"
         android:id="@+id/videoUrlText"
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
