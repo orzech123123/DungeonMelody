@@ -21,6 +21,10 @@
         android:scrollbars = "vertical"
         android:id="@+id/textView"
         android:layout_width="match_parent"
-        android:layout_height="162dp" />
+        android:layout_height="wrap_content"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:textSize="20dp"
+        />
 
 </TableLayout>

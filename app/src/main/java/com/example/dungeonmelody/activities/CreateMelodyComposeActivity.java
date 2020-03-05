@@ -83,24 +83,28 @@ public class CreateMelodyComposeActivity extends YouTubeBaseActivity
         _uiRefreshTask.execute();
     }
 
+    //TODO to bedzie zastapione innym rysowaniem/wyswietlaniem
     private void UpdateTabsOnView() {
-        //TODO to bedzie zastapione innym rysowaniem/wyswietlaniem
-       String text = "";
+        String text = "";
         for (TabPart tabPart: _melodyComposerService.GetTabParts()) {
             String tabPartText = tabPart.Tabs + "<br />";
             String color = "";
             if(tabPart.ProgressEnd != null)
             {
-                color = "blue";
+                color = String.format("#%06X", (0xFFFFFF & getResources().getColor(R.color.colorPrimaryDark)));
             }
             else if(tabPart.ProgressStart != null)
             {
-                color = "green";
+                color = String.format("#%06X", (0xFFFFFF & getResources().getColor(R.color.colorGreen)));
             }
 
             text = text + "<font color='"+color+"'>" + tabPartText + "</font>";
         }
-        ((TextView) findViewById(R.id.textView)).setText(Html.fromHtml(text), TextView.BufferType.SPANNABLE);
+
+        String finalText = text;
+        runOnUiThread(() -> {
+            ((TextView) findViewById(R.id.textView)).setText(Html.fromHtml(finalText), TextView.BufferType.SPANNABLE);
+        });
     }
 
     private View.OnClickListener GetBreakButtonOnClickListener() {

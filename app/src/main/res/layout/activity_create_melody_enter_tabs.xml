@@ -2,30 +2,38 @@
 <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools"
     android:paddingLeft="16dp"
     android:paddingRight="16dp"
     android:orientation="vertical">
 
-    <EditText
-        android:id="@+id/tabsText"
-        android:layout_width="0dp"
-        android:layout_height="400dp"
-        android:textColor="@color/colorTextDefault"
-        android:inputType="text|textMultiLine"
-        />
+    <TableRow
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:weightSum="2" >
 
-    <TableRow>
         <Button
             android:id="@+id/separatorButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Separator" />
+            android:text="Separator"
+            android:layout_weight="1"/>
 
         <Button
             android:id="@+id/nextButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Next" />
+            android:text="Next"
+            android:layout_weight="1"/>
+
     </TableRow>
+
+    <EditText
+        android:gravity="top|left"
+        android:hint="Enter TABS"
+        android:id="@+id/tabsText"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:textColor="@color/colorTextDefault"
+        android:inputType="text|textMultiLine"
+        />
 </TableLayout>

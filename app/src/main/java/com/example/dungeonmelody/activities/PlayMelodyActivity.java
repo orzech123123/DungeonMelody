@@ -61,8 +61,6 @@ public class PlayMelodyActivity extends YouTubeBaseActivity
         _youTubePlayerView.initialize(ApisConfig.GetYoutubeApiKey(), GetPlayerOnInitListener());
 
         _seekBar.setEnabled(false);
-
-        UpdateTabsOnView();
     }
 
     //TODO to bedzie zastapione innym rysowaniem/wyswietlaniem
@@ -84,7 +82,11 @@ public class PlayMelodyActivity extends YouTubeBaseActivity
 
             text = text + "<font color='"+color+"'>" + tabPartText + "</font>";
         }
-        ((TextView) findViewById(R.id.textView)).setText(Html.fromHtml(text), TextView.BufferType.SPANNABLE);
+
+        String finalText = text;
+        runOnUiThread(() -> {
+            ((TextView) findViewById(R.id.textView)).setText(Html.fromHtml(finalText), TextView.BufferType.SPANNABLE);
+        });
     }
 
     private YouTubePlayer.OnInitializedListener GetPlayerOnInitListener(){
