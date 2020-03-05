@@ -67,19 +67,19 @@ public class PlayMelodyActivity extends YouTubeBaseActivity
 
     //TODO to bedzie zastapione innym rysowaniem/wyswietlaniem
     private void UpdateTabsOnView() {
-        if(_youTubePlayer == null || !_youTubePlayer.isPlaying() || _tabParts == null)
-        {
-            return;
-        }
+        int currentTime = _youTubePlayer != null ? _youTubePlayer.getCurrentTimeMillis() : 0;
 
         String text = "";
         for (TabPart tabPart: _tabParts) {
             String tabPartText = tabPart.Tabs + "<br />";
             String color = "";
-            if(_youTubePlayer.getCurrentTimeMillis() > tabPart.ProgressStart &&
-                _youTubePlayer.getCurrentTimeMillis() < tabPart.ProgressEnd)
+            if(currentTime > tabPart.ProgressStart && currentTime < tabPart.ProgressEnd)
             {
-                color = "blue";
+                color = String.format("#%06X", (0xFFFFFF & getResources().getColor(R.color.colorGreen)));
+            }
+            else if(currentTime > tabPart.ProgressStart)
+            {
+                color = String.format("#%06X", (0xFFFFFF & getResources().getColor(R.color.colorPrimaryDark)));
             }
 
             text = text + "<font color='"+color+"'>" + tabPartText + "</font>";
