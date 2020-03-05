@@ -10,6 +10,7 @@
         android:id="@+id/videoUrlText"
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
+        android:textColor="@color/colorTextDefault"
         android:inputType="text"/>
 
     <view
