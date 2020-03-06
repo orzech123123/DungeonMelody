@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.dungeonmelody">
+    package="com.skycode.dungeonmelody">
 
     <uses-permission android:name="android.permission.INTERNET" />
 
@@ -11,18 +11,18 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activities.PlayMelodyActivity"></activity>
-        <activity android:name=".activities.MelodyListActivity" />
-        <activity android:name=".activities.CreateMelodyEnterTabsActivity" />
-        <activity android:name=".activities.CreateMelodyChooseVideoActivity" />
-        <activity android:name=".activities.MenuActivity">
+        <activity android:name="com.skycode.dungeonmelody.activities.PlayMelodyActivity"></activity>
+        <activity android:name="com.skycode.dungeonmelody.activities.MelodyListActivity" />
+        <activity android:name="com.skycode.dungeonmelody.activities.CreateMelodyEnterTabsActivity" />
+        <activity android:name="com.skycode.dungeonmelody.activities.CreateMelodyChooseVideoActivity" />
+        <activity android:name="com.skycode.dungeonmelody.activities.MenuActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activities.CreateMelodyComposeActivity" />
+        <activity android:name="com.skycode.dungeonmelody.activities.CreateMelodyComposeActivity" />
     </application>
 
 </manifest>
